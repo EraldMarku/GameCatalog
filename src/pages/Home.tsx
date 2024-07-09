@@ -1,4 +1,4 @@
-// src/pages/home
+// src/pages/home.tsx
 
 import React, { useState, useEffect } from "react";
 import GameCatalog from "../components/GameCatalog";
@@ -9,12 +9,15 @@ import axios from "axios";
 
 interface HomePageProps {
   searchQuery: string;
+  onAddToPlayed: (game: Game) => void; // Ensure this prop is correctly typed
 }
 
-const Home: React.FC<HomePageProps> = ({ searchQuery }) => {
+const Home: React.FC<HomePageProps> = ({ searchQuery, onAddToPlayed }) => {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [selectedPlatform, setSelectedPlatform] = useState<string>("");
 
   const fetchGames = async () => {
     try {
@@ -48,9 +51,18 @@ const Home: React.FC<HomePageProps> = ({ searchQuery }) => {
     }
   }, [searchQuery]);
 
-  const filteredGames = games.filter((game) =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGames = games.filter((game) => {
+    const matchesSearch = game.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesGenre = selectedGenre
+      ? game.genres.some((genre) => genre.name === selectedGenre)
+      : true;
+    const matchesPlatform = selectedPlatform
+      ? game.platform.includes(selectedPlatform)
+      : true;
+    return matchesSearch && matchesGenre && matchesPlatform;
+  });
 
   return (
     <div
@@ -63,7 +75,10 @@ const Home: React.FC<HomePageProps> = ({ searchQuery }) => {
       <Container maxWidth="xl" style={{ marginTop: "20px" }}>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={2}>
-            <Sidebar />
+            <Sidebar
+              onGenreSelect={setSelectedGenre}
+              onPlatformSelect={setSelectedPlatform}
+            />
           </Grid>
           <Grid item xs={12} lg={10}>
             <Box mt={5}>
@@ -79,7 +94,10 @@ const Home: React.FC<HomePageProps> = ({ searchQuery }) => {
                   <CircularProgress />
                 </Box>
               ) : (
-                <GameCatalog games={filteredGames} onAddToPlayed={() => {}} />
+                <GameCatalog
+                  games={filteredGames}
+                  onAddToPlayed={onAddToPlayed} // Pass onAddToPlayed function
+                />
               )}
             </Box>
           </Grid>

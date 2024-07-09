@@ -1,4 +1,4 @@
-// src/components/GameCard
+// src/components/GameCard.tsx
 
 import React from "react";
 import {
@@ -21,6 +21,12 @@ import {
 } from "react-icons/fa";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 
+interface GameCardProps {
+  game: Game;
+  onAddToPlayed: () => void; // Updated prop type for adding games
+  onRemoveFromPlayed?: () => void; // New optional prop for removing games
+}
+
 const CardWrapper = styled(Card)({
   backgroundColor: "#393e6f",
   color: "#ffffff",
@@ -31,37 +37,36 @@ const CardWrapper = styled(Card)({
   justifyContent: "space-between",
 });
 
-interface GameCardProps {
-  game: Game;
-  onAddToPlayed: (game: Game) => void;
-}
-
-const GameCard: React.FC<GameCardProps> = ({ game, onAddToPlayed }) => {
+const GameCard: React.FC<GameCardProps> = ({
+  game,
+  onAddToPlayed,
+  onRemoveFromPlayed,
+}) => {
   const getPlatformIcon = (platform: string): JSX.Element | null => {
     switch (platform.toLowerCase()) {
       case "playstation":
       case "playstation 3":
       case "playstation 4":
       case "playstation 5":
-        return <FaPlaystation />;
+        return <FaPlaystation color="#000000" />;
       case "xbox":
       case "xbox 360":
       case "xbox one":
       case "xbox series x":
-        return <FaXbox />;
+        return <FaXbox color="#000000" />;
       case "pc":
       case "windows":
-        return <FaWindows />;
+        return <FaWindows color="#000000" />;
       case "ios":
       case "macos":
       case "apple":
-        return <FaApple />;
+        return <FaApple color="#000000" />;
       case "linux":
-        return <FaLinux />;
+        return <FaLinux color="#000000" />;
       case "android":
-        return <FaAndroid />;
+        return <FaAndroid color="#000000" />;
       case "nintendo switch":
-        return <SportsEsportsIcon />;
+        return <SportsEsportsIcon style={{ color: "#000000" }} />;
       default:
         return null;
     }
@@ -83,14 +88,13 @@ const GameCard: React.FC<GameCardProps> = ({ game, onAddToPlayed }) => {
         <Typography gutterBottom variant="h5" component="div">
           {game.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {uniquePlatforms.map((platform, index) => (
-            <React.Fragment key={index}>
+        <Grid container spacing={1} style={{ marginBottom: "10px" }}>
+          {uniquePlatforms.map((platform) => (
+            <Grid item key={platform}>
               {getPlatformIcon(platform)}
-              {index < uniquePlatforms.length - 1 ? " " : ""}
-            </React.Fragment>
+            </Grid>
           ))}
-        </Typography>
+        </Grid>
         <Typography variant="body2" color="text.secondary">
           Release Date: {game.releaseDate}
         </Typography>
@@ -101,30 +105,35 @@ const GameCard: React.FC<GameCardProps> = ({ game, onAddToPlayed }) => {
           Rating: {game.rating}
         </Typography>
       </CardContent>
-      <Grid container spacing={1} alignItems="center" justifyContent="center">
-        <Grid item xs={7}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          style={{
+            width: "70%",
+            backgroundColor: "#321d2f",
+            marginRight: "5%",
+          }}
+        >
+          Game Details
+        </Button>
+        {onRemoveFromPlayed ? (
           <Button
             variant="contained"
-            color="primary"
-            fullWidth
-            style={{ backgroundColor: "#321d2f", color: "#ffffff" }}
-            onClick={() => {}}
+            style={{ width: "25%", backgroundColor: "#321d2f" }}
+            onClick={onRemoveFromPlayed} // Call onRemoveFromPlayed if provided
           >
-            Game Details
+            -
           </Button>
-        </Grid>
-        <Grid item xs={5}>
+        ) : (
           <Button
             variant="contained"
-            color="primary"
-            fullWidth
-            style={{ backgroundColor: "#321d2f", color: "#ffffff" }}
-            onClick={() => onAddToPlayed(game)}
+            style={{ width: "25%", backgroundColor: "#321d2f" }}
+            onClick={onAddToPlayed} // Fallback to onAddToPlayed if onRemoveFromPlayed is not provided
           >
             +
           </Button>
-        </Grid>
-      </Grid>
+        )}
+      </div>
     </CardWrapper>
   );
 };

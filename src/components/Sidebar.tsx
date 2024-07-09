@@ -1,9 +1,16 @@
 // src/components/Sidebar
-
 import React, { useState } from "react";
 import { Drawer, Button, Typography, Hidden } from "@mui/material";
 
-const Sidebar = () => {
+interface SidebarProps {
+  onGenreSelect: (genre: string) => void;
+  onPlatformSelect: (platform: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
+  onGenreSelect,
+  onPlatformSelect,
+}) => {
   const [genre, setGenre] = useState("");
   const [platform, setPlatform] = useState("");
   const [showMoreGenres, setShowMoreGenres] = useState(false);
@@ -11,10 +18,12 @@ const Sidebar = () => {
 
   const handleGenreChange = (selectedGenre: string) => {
     setGenre(selectedGenre);
+    onGenreSelect(selectedGenre);
   };
 
   const handlePlatformChange = (selectedPlatform: string) => {
     setPlatform(selectedPlatform);
+    onPlatformSelect(selectedPlatform);
   };
 
   const genres = [
@@ -47,7 +56,7 @@ const Sidebar = () => {
           anchor="left"
           PaperProps={{
             style: {
-              width: "200px", // Adding width
+              width: "200px",
               backgroundColor: "#393e6f",
               color: "#ffffff",
               top: "65px",
