@@ -1,38 +1,83 @@
+/* App.css */
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background-color: #4c5f7a; /* Set background color for the entire app */
+  min-height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #393e6f;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px 0;
+  font-size: calc(10px + 2vmin);
+  color: #321d2f;
+}
+
+.game-grid-container {
+  padding-top: 70px; /* Adjust this value to match the height of your header */
+  flex: 1; /* Allow the game grid to take remaining height */
+  display: flex;
+  justify-content: center;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(250px, 1fr)
+  ); /* Adjust grid columns */
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* Adjust max-width if needed */
+  margin: 0 auto; /* Center align the grid */
+}
+
+.game-card {
+  background-color: #3d2e4f; /* Set background color for game cards */
+  color: #ffffff; /* Set text color for game details */
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  height: 100%; /* Ensure the card takes full height */
+  transition: transform 0.2s ease-in-out; /* Optional: Add transition for hover effects */
 }
 
-.App-link {
-  color: #61dafb;
+.game-card img {
+  width: 100%; /* Ensure the image takes full width */
+  height: auto;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.game-card:hover {
+  transform: translateY(-5px); /* Optional: Add hover effect */
+}
+
+.game-card h5 {
+  margin: 10px 0;
+}
+
+.game-card p {
+  margin-bottom: 10px;
+}
+
+.game-card button {
+  background-color: #393e6f;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.game-card button:hover {
+  background-color: #321d2f;
 }
