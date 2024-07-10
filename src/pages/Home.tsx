@@ -9,15 +9,15 @@ import axios from "axios";
 
 interface HomePageProps {
   searchQuery: string;
-  onAddToPlayed: (game: Game) => void; // Ensure this prop is correctly typed
+  onAddToPlayed: (game: Game) => void;
 }
 
 const Home: React.FC<HomePageProps> = ({ searchQuery, onAddToPlayed }) => {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedGenre, setSelectedGenre] = useState<string>("");
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("");
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
 
   const fetchGames = async () => {
     try {
@@ -55,14 +55,30 @@ const Home: React.FC<HomePageProps> = ({ searchQuery, onAddToPlayed }) => {
     const matchesSearch = game.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-    const matchesGenre = selectedGenre
-      ? game.genres.some((genre) => genre.name === selectedGenre)
-      : true;
-    const matchesPlatform = selectedPlatform
-      ? game.platform.includes(selectedPlatform)
-      : true;
+    const matchesGenre =
+      selectedGenres.length === 0 ||
+      selectedGenres.some((genre) => game.genres.some((g) => g.name === genre));
+    const matchesPlatform =
+      selectedPlatforms.length === 0 ||
+      selectedPlatforms.some((platform) => game.platform.includes(platform));
     return matchesSearch && matchesGenre && matchesPlatform;
   });
+
+  const handleGenreSelect = (genre: string) => {
+    setSelectedGenres((prevGenres) =>
+      prevGenres.includes(genre)
+        ? prevGenres.filter((g) => g !== genre)
+        : [...prevGenres, genre]
+    );
+  };
+
+  const handlePlatformSelect = (platform: string) => {
+    setSelectedPlatforms((prevPlatforms) =>
+      prevPlatforms.includes(platform)
+        ? prevPlatforms.filter((p) => p !== platform)
+        : [...prevPlatforms, platform]
+    );
+  };
 
   return (
     <div
@@ -76,8 +92,12 @@ const Home: React.FC<HomePageProps> = ({ searchQuery, onAddToPlayed }) => {
         <Grid container spacing={3}>
           <Grid item xs={12} lg={2}>
             <Sidebar
-              onGenreSelect={setSelectedGenre}
-              onPlatformSelect={setSelectedPlatform}
+              onGenreSelect={handleGenreSelect}
+              onPlatformSelect={handlePlatformSelect}
+              selectedGenres={selectedGenres}
+              selectedPlatforms={selectedPlatforms}
+              onGenreDeselect={handleGenreSelect} // Implement deselect
+              onPlatformDeselect={handlePlatformSelect} // Implement deselect
             />
           </Grid>
           <Grid item xs={12} lg={10}>
@@ -96,7 +116,7 @@ const Home: React.FC<HomePageProps> = ({ searchQuery, onAddToPlayed }) => {
               ) : (
                 <GameCatalog
                   games={filteredGames}
-                  onAddToPlayed={onAddToPlayed} // Pass onAddToPlayed function
+                  onAddToPlayed={onAddToPlayed}
                 />
               )}
             </Box>

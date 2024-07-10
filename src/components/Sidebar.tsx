@@ -1,29 +1,41 @@
-// src/components/Sidebar
+// src/components/Sidebar.tsx
 import React, { useState } from "react";
 import { Drawer, Button, Typography, Hidden } from "@mui/material";
 
 interface SidebarProps {
   onGenreSelect: (genre: string) => void;
   onPlatformSelect: (platform: string) => void;
+  selectedGenres: string[]; // Maintain selected genres state
+  selectedPlatforms: string[]; // Maintain selected platforms state
+  onGenreDeselect: (genre: string) => void; // Add deselection handler
+  onPlatformDeselect: (platform: string) => void; // Add deselection handler
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   onGenreSelect,
   onPlatformSelect,
+  selectedGenres,
+  selectedPlatforms,
+  onGenreDeselect,
+  onPlatformDeselect,
 }) => {
-  const [genre, setGenre] = useState("");
-  const [platform, setPlatform] = useState("");
   const [showMoreGenres, setShowMoreGenres] = useState(false);
   const [showMorePlatforms, setShowMorePlatforms] = useState(false);
 
   const handleGenreChange = (selectedGenre: string) => {
-    setGenre(selectedGenre);
-    onGenreSelect(selectedGenre);
+    if (selectedGenres.includes(selectedGenre)) {
+      onGenreDeselect(selectedGenre); // Deselect if already selected
+    } else {
+      onGenreSelect(selectedGenre); // Select if not selected
+    }
   };
 
   const handlePlatformChange = (selectedPlatform: string) => {
-    setPlatform(selectedPlatform);
-    onPlatformSelect(selectedPlatform);
+    if (selectedPlatforms.includes(selectedPlatform)) {
+      onPlatformDeselect(selectedPlatform); // Deselect if already selected
+    } else {
+      onPlatformSelect(selectedPlatform); // Select if not selected
+    }
   };
 
   const genres = [
@@ -81,12 +93,16 @@ const Sidebar: React.FC<SidebarProps> = ({
                     key={genreOption}
                     onClick={() => handleGenreChange(genreOption)}
                     style={{
-                      color: genre === genreOption ? "#ffffff" : "#cccccc",
+                      color: selectedGenres.includes(genreOption)
+                        ? "#ffffff"
+                        : "#cccccc",
                       textTransform: "none",
                       display: "block",
                       marginBottom: "8px",
                       textAlign: "left",
-                      fontWeight: genre === genreOption ? "bold" : "normal",
+                      fontWeight: selectedGenres.includes(genreOption)
+                        ? "bold"
+                        : "normal",
                     }}
                   >
                     {genreOption}
@@ -120,14 +136,16 @@ const Sidebar: React.FC<SidebarProps> = ({
                     key={platformOption}
                     onClick={() => handlePlatformChange(platformOption)}
                     style={{
-                      color:
-                        platform === platformOption ? "#ffffff" : "#cccccc",
+                      color: selectedPlatforms.includes(platformOption)
+                        ? "#ffffff"
+                        : "#cccccc",
                       textTransform: "none",
                       display: "block",
                       marginBottom: "8px",
                       textAlign: "left",
-                      fontWeight:
-                        platform === platformOption ? "bold" : "normal",
+                      fontWeight: selectedPlatforms.includes(platformOption)
+                        ? "bold"
+                        : "normal",
                     }}
                   >
                     {platformOption}

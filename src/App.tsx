@@ -44,6 +44,14 @@ const App = () => {
                 onPlatformSelect={(platform: string) => {
                   throw new Error("Function not implemented.");
                 }}
+                onGenreDeselect={function (genre: string): void {
+                  throw new Error("Function not implemented.");
+                }}
+                onPlatformDeselect={function (platform: string): void {
+                  throw new Error("Function not implemented.");
+                }}
+                selectedGenres={[]}
+                selectedPlatforms={[]}
               />
               <div style={{ flexGrow: 1 }}>
                 <Header
