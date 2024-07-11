@@ -1,4 +1,4 @@
-// App.tsx
+// src/App.tsx
 
 import React, { useState } from "react";
 import {
@@ -12,6 +12,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AddToPlayedGames from "./pages/AddToPlayedGames";
+import GameDetails from "./pages/GameDetails";
 import { Game } from "./types/Game";
 
 const App = () => {
@@ -83,6 +84,8 @@ const App = () => {
             </div>
           }
         />
+        <Route path="/game/:id" element={<GameDetails />} />{" "}
+        {/* Add this line */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

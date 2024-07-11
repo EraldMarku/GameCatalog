@@ -41,6 +41,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleTitleClick = () => {
     navigate("/home");
+    window.location.reload(); // Reload the page
   };
 
   return (

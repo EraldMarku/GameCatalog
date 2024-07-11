@@ -9,6 +9,8 @@ import {
   Button,
   Grid,
   styled,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Game } from "../types/Game";
 import {
@@ -20,14 +22,15 @@ import {
   FaXbox,
 } from "react-icons/fa";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import { Link } from "react-router-dom";
 
 interface GameCardProps {
   game: Game;
-  onAddToPlayed: () => void; // Updated prop type for adding games
-  onRemoveFromPlayed?: () => void; // New optional prop for removing games
+  onAddToPlayed: () => void;
+  onRemoveFromPlayed?: () => void;
 }
 
-const CardWrapper = styled(Card)({
+const CardWrapper = styled(Card)(({ theme }) => ({
   backgroundColor: "#393e6f",
   color: "#ffffff",
   marginBottom: "20px",
@@ -35,13 +38,30 @@ const CardWrapper = styled(Card)({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-});
+  boxShadow: "0px 5px 8px rgba(0, 0, 0, 0.6)",
+  transition: "box-shadow 0.3s ease-in-out",
+
+  [theme.breakpoints.down("sm")]: {
+    marginBottom: "10px",
+  },
+  [theme.breakpoints.up("md")]: {
+    marginLeft: "0px",
+    marginRight: "10px",
+  },
+
+  "&:hover": {
+    boxShadow: "0px 6px 12px rgba(0, 0, 0, 1.2)",
+  },
+}));
 
 const GameCard: React.FC<GameCardProps> = ({
   game,
   onAddToPlayed,
   onRemoveFromPlayed,
 }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const getPlatformIcon = (platform: string): JSX.Element | null => {
     switch (platform.toLowerCase()) {
       case "playstation":
@@ -72,9 +92,11 @@ const GameCard: React.FC<GameCardProps> = ({
     }
   };
 
-  const uniquePlatforms = Array.from(
-    new Set(game.platform.map((platform) => platform.toLowerCase()))
-  );
+  const uniquePlatforms = Array.isArray(game.platforms)
+    ? game.platforms.map((platform) => platform.platform.name.toLowerCase())
+    : [];
+
+  const gameGenres = game.genres.map((genre) => genre.name).join(", ");
 
   return (
     <CardWrapper>
@@ -88,47 +110,68 @@ const GameCard: React.FC<GameCardProps> = ({
         <Typography gutterBottom variant="h5" component="div">
           {game.name}
         </Typography>
+        <Typography variant="body2" color="text.secondary"></Typography>
         <Grid container spacing={1} style={{ marginBottom: "10px" }}>
-          {uniquePlatforms.map((platform) => (
-            <Grid item key={platform}>
+          {uniquePlatforms.map((platform, index) => (
+            <Grid item key={index}>
               {getPlatformIcon(platform)}
             </Grid>
           ))}
         </Grid>
         <Typography variant="body2" color="text.secondary">
-          Release Date: {game.releaseDate}
+          <strong>Release Date:</strong> {game.releaseDate}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Genres: {game.genres.map((genre) => genre.name).join(", ")}
+          <strong>Genres:</strong> {gameGenres}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Rating: {game.rating}
+          <strong>Rating:</strong> {game.rating}
         </Typography>
       </CardContent>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Button
           variant="contained"
-          style={{
+          sx={{
             width: "70%",
             backgroundColor: "#321d2f",
             marginRight: "5%",
+            transition: "box-shadow 0.3s ease-in-out",
+            "&:hover": {
+              boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.5)",
+            },
           }}
+          component={Link}
+          to={`/game/${game.id}`}
         >
           Game Details
         </Button>
         {onRemoveFromPlayed ? (
           <Button
             variant="contained"
-            style={{ width: "25%", backgroundColor: "#321d2f" }}
-            onClick={onRemoveFromPlayed} // Call onRemoveFromPlayed if provided
+            sx={{
+              width: "25%",
+              backgroundColor: "#321d2f",
+              transition: "box-shadow 0.3s ease-in-out",
+              "&:hover": {
+                boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.5)",
+              },
+            }}
+            onClick={onRemoveFromPlayed}
           >
             -
           </Button>
         ) : (
           <Button
             variant="contained"
-            style={{ width: "25%", backgroundColor: "#321d2f" }}
-            onClick={onAddToPlayed} // Fallback to onAddToPlayed if onRemoveFromPlayed is not provided
+            sx={{
+              width: "25%",
+              backgroundColor: "#321d2f",
+              transition: "box-shadow 0.3s ease-in-out",
+              "&:hover": {
+                boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.5)",
+              },
+            }}
+            onClick={onAddToPlayed}
           >
             +
           </Button>
