@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const platforms = [
     "PC",
     "PlayStation 4",
-    "Xbox",
+    "Xbox One",
     "Mobile",
     "Nintendo Switch",
     "iOS",
@@ -64,8 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     "Linux",
   ];
 
-  // Adjust the width of the drawer here. Default is set to 180px.
-  const drawerWidth = 180;
+  const drawerWidth = 220;
 
   const drawerContent = (
     <div style={{ padding: "16px" }}>

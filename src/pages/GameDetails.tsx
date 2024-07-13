@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Game } from "../types/Game";
 import Header from "../components/Header";
+import { CircularProgress } from "@mui/material";
 
 const GameDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,7 +64,21 @@ const GameDetails: React.FC = () => {
     setShowMoreAbout(false); // Reset show more/less state when switching language
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div
+        style={{
+          backgroundColor: "#4c5f7a",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+
   if (error) return <div>{error}</div>;
   if (!game) return <div>Game not found</div>;
 

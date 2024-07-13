@@ -54,6 +54,10 @@ const CardWrapper = styled(Card)(({ theme }) => ({
   },
 }));
 
+const PlatformIconContainer = styled(Grid)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+}));
+
 const GameCard: React.FC<GameCardProps> = ({
   game,
   onAddToPlayed,
@@ -111,13 +115,13 @@ const GameCard: React.FC<GameCardProps> = ({
           {game.name}
         </Typography>
         <Typography variant="body2" color="text.secondary"></Typography>
-        <Grid container spacing={1} style={{ marginBottom: "10px" }}>
+        <PlatformIconContainer container spacing={1}>
           {uniquePlatforms.map((platform, index) => (
             <Grid item key={index}>
               {getPlatformIcon(platform)}
             </Grid>
           ))}
-        </Grid>
+        </PlatformIconContainer>
         <Typography variant="body2" color="text.secondary">
           <strong>Release Date:</strong> {game.releaseDate}
         </Typography>
